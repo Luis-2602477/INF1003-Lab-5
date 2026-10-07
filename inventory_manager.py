@@ -22,8 +22,10 @@ def load_inventory():
 
 
 def save_inventory(inventory):
+    """Write the product list to inventory.json."""
     with open(INVENTORY_FILE, "w") as f:
         json.dump(inventory, f, indent=4)
+
 
 def get_int(prompt):
     while True:
@@ -46,112 +48,8 @@ def get_price(prompt):
 
 
 def find_product(inventory, product_id):
+    """Return the product dictionary with this ID, or None if it doesn't exist."""
     for product in inventory:
         if product["id"] == product_id:
             return product
     return None
-
-
-def display_all(inventory):
-    print("Current Inventory")
-    print(LINE)
-    if not inventory:
-        print("No products in inventory.")
-    for p in inventory:
-        print(f"ID: {p['id']} | Name: {p['name']} | Price: ${p['price']:.2f} | Stock: {p['stock']}")
-    print(LINE)
-
-
-def add_product(inventory):
-    print("Add New Product")
-    product_id = input("Product ID: ").strip().upper()
-    if find_product(inventory, product_id):
-        print(f"Error: A product with ID {product_id} already exists.")
-        return
-
-    name = input("Product Name: ").strip()
-    price = get_price("Price: ")
-    stock = get_int("Stock Quantity: ")
-
-    inventory.append({"id": product_id, "name": name, "price": price, "stock": stock})
-    print("Product added successfully!")
-
-
-def update_stock(inventory):
-    print("Update Stock")
-    product_id = input("Enter Product ID: ").strip().upper()
-    product = find_product(inventory, product_id)
-    if product is None:
-        print("Product not found.")
-        return
-
-    print("Product Found:")
-    print(f"Name: {product['name']}")
-    print(f"Current Stock: {product['stock']}")
-    product["stock"] = get_int("New Stock Quantity: ")
-    print("Stock updated successfully!")
-
-
-def search_product(inventory):
-    print("Search Product")
-    product_id = input("Enter Product ID: ").strip().upper()
-    product = find_product(inventory, product_id)
-    if product is None:
-        print("Product not found.")
-        return
-
-    print("Product Found")
-    print(LINE)
-    print(f"ID: {product['id']}")
-    print(f"Name: {product['name']}")
-    print(f"Price: ${product['price']:.2f}")
-    print(f"Stock: {product['stock']}")
-    print(LINE)
-
-def show_menu():
-    print("----------- MENU -----------")
-    print("1. Display All Products")
-    print("2. Add Product")
-    print("3. Update Stock")
-    print("4. Search Product")
-    print("5. Save Inventory")
-    print("6. Exit")
-    print("----------------------------")
-
-
-def main():
-    print("=" * 40)
-    print("INVENTORY MANAGEMENT SYSTEM")
-    print("=" * 40)
-    inventory = load_inventory()
-    show_menu()
-
-    while True:
-        choice = input("Enter option: ").strip()
-
-        if choice == "1":
-            display_all(inventory)
-        elif choice == "2":
-            add_product(inventory)
-        elif choice == "3":
-            update_stock(inventory)
-        elif choice == "4":
-            search_product(inventory)
-        elif choice == "5":
-            print("Saving inventory...")
-            save_inventory(inventory)
-            print(f"Inventory saved successfully to {INVENTORY_FILE}.")
-        elif choice == "6":
-            print("Saving inventory before exit...")
-            save_inventory(inventory)
-            print("Inventory saved successfully.")
-            print("Thank you for using Inventory Management System.")
-            print("Program terminated.")
-            break
-        else:
-            print("Invalid option. Please enter a number from 1 to 6.")
-        print()
-
-
-if __name__ == "__main__":
-    main()
